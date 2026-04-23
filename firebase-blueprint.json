@@ -1,0 +1,55 @@
+{
+  "entities": {
+    "appointment": {
+      "title": "Appointment",
+      "description": "A patient appointment request",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Patient's full name" },
+        "email": { "type": "string", "format": "email", "description": "Patient's email" },
+        "phone": { "type": "string", "description": "Patient's phone number" },
+        "service": { "type": "string", "description": "Selected service" },
+        "date": { "type": "string", "description": "Appointment date" },
+        "time": { "type": "string", "description": "Appointment time" },
+        "notes": { "type": "string", "description": "Additional notes from patient" },
+        "status": { "type": "string", "enum": ["pending", "confirmed", "completed"], "description": "Current status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Record creation time" }
+      },
+      "required": ["fullName", "phone", "service", "date", "time", "status", "createdAt"]
+    },
+    "specialist": {
+      "title": "Specialist",
+      "description": "A clinic specialist doctor",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "qualification": { "type": "string" },
+        "specialty": { "type": "string" },
+        "experience": { "type": "string" },
+        "image": { "type": "string", "description": "Base64 or URL image" },
+        "bio": { "type": "string" }
+      },
+      "required": ["name", "qualification", "specialty", "experience", "image", "bio"]
+    }
+  },
+  "firestore": {
+    "/appointments/{appointmentId}": {
+      "schema": "appointment",
+      "description": "Collection of all appointment requests"
+    },
+    "/doctors/{doctorId}": {
+      "schema": "specialist",
+      "description": "Collection of clinic specialists"
+    },
+    "/admins/{adminId}": {
+      "schema": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" },
+          "role": { "type": "string" }
+        }
+      },
+      "description": "Collection of authorized admin users"
+    }
+  }
+}
