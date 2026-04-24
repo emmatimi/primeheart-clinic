@@ -590,7 +590,7 @@ export default function AdminDashboard() {
                         <td className="px-6 py-5 text-center">
                            <StatusBadge status={app.status} />
                            {app.status !== 'completed' && (
-                             <div className="mt-2 flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                             <div className="mt-2 flex items-center justify-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                {app.status === 'pending' && (
                                  <button 
                                    onClick={() => handleUpdateStatus(app, 'confirmed')}
@@ -624,49 +624,18 @@ export default function AdminDashboard() {
                                   </a>
                                   <a 
                                     href={`mailto:${app.email}?subject=Regarding Your Appointment at PrimeHeart Clinic`}
-                                    className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-all"
+                                    className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 active:bg-green-100 rounded-lg transition-all"
                                     title="Send Email"
                                   >
                                      <Mail className="w-4 h-4" />
                                   </a>
-                                  <div className="relative group/actions">
-                                     <button className="p-2 text-gray-400 hover:text-gray-900 rounded-lg">
-                                        <MoreVertical className="w-4 h-4" />
-                                     </button>
-                                     <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-xl shadow-xl py-2 w-48 opacity-0 invisible group-hover/actions:opacity-100 group-hover/actions:visible transition-all z-20">
-                                        {app.status !== 'completed' && (
-                                          <>
-                                            {app.status === 'pending' && (
-                                              <button 
-                                                onClick={() => handleUpdateStatus(app, 'confirmed')}
-                                                disabled={statusUpdating === app.id}
-                                                className="w-full text-left px-4 py-2 text-xs font-bold text-green-600 hover:bg-green-50 transition-all flex items-center gap-2"
-                                              >
-                                                 {statusUpdating === app.id ? (
-                                                   <div className="w-3 h-3 border-2 border-green-600/30 border-t-green-600 rounded-full animate-spin" />
-                                                 ) : (
-                                                   <CheckCircle className="w-4 h-4" />
-                                                 )}
-                                                 Mark Confirmed
-                                              </button>
-                                            )}
-                                            <button 
-                                              onClick={() => handleUpdateStatus(app, 'completed')}
-                                              disabled={statusUpdating === app.id}
-                                              className="w-full text-left px-4 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 transition-all flex items-center gap-2"
-                                            >
-                                               <CheckCircle className="w-4 h-4" /> Mark Completed
-                                            </button>
-                                          </>
-                                        )}
-                                        <button 
-                                          onClick={() => handleDelete(app)}
-                                          className="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 transition-all flex items-center gap-2"
-                                        >
-                                           <Trash2 className="w-4 h-4" /> Delete Appointment
-                                        </button>
-                                     </div>
-                                  </div>
+                                  <button 
+                                    onClick={() => handleDelete(app)}
+                                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 rounded-lg transition-all"
+                                    title="Delete Appointment"
+                                  >
+                                     <Trash2 className="w-4 h-4" />
+                                  </button>
                                </div>
                             </td>
                          </tr>
