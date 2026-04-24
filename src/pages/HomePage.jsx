@@ -158,7 +158,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col">
       <SEO 
-        title="PrimeHeart Multispecialist Clinic | Best Hospital in Magboro"
+        title="PrimeHeart Multispecialist Clinic"
         description="Looking for the best hospital in Magboro, Ogun State? PrimeHeart Multispecialist Clinic offers expert cardiology, medical laboratory, ECG, ECHO scans, and general healthcare."
         schema={[schema, faqSchema]}
       />
