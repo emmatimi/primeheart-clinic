@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import SEO from '../components/SEO';
@@ -76,14 +76,44 @@ const services = [
 
 const testimonials = [
   {
-    name: "Adebisi Oluchi",
+    name: "Kehinde Akinkunmi",
     role: "Patient",
-    text: "The care I received at PrimeHeart was exceptional. The staff are professional and it is truly the best hospital in Magboro.",
+    text: "My parents' cardiology consultation was a seamless experience. The cardiologist was knowledgeable and took the time to explain everything clearly. The diagnostic investigations were prompt and my parents felt well-informed and reassured throughout the process. I highly recommend this service for anyone seeking quality cardiac care.",
   },
   {
     name: "John Okafor",
     role: "Patient",
     text: "Booking an appointment was so easy. I didn't have to wait for hours for my medical laboratory tests. Highly recommended.",
+  },
+  {
+    name: "Gregory Shegun Jemitola",
+    role: "Patient",
+    text: "The response to my immediate need was prompt and care was administered with strict medical probes. Follow-up is administered with professional tools of the relevant speciality. Doctor/patient relationship is warm and friendly",
+  },
+  {
+    name: "Ifeoluwa Odutola",
+    role: "Patient",
+    text: "A welcoming Clinic with excellent care, from the reception to the consultation. Highly recommended.",
+  },
+  {
+    name: "Blessing Jumia Yusuf",
+    role: "Patient",
+    text: "The clinic's services are top notch. I highly recommend Prime heart Multispecialist Clinic.",
+  },
+  {
+    name: "Leonard Ogunleye",
+    role: "Patient",
+    text: "Family oriented hospital with friendly staff in this difficult times. Gladly refer you to book your appointment today.",
+  },
+  {
+    name: "Abiodun Ajadi",
+    role: "Patient",
+    text: "Personalised care! I love it",
+  },
+  {
+    name: "Anyawu Chidinma",
+    role: "Patient",
+    text: "Excellent service, excellent result.",
   }
 ];
 
@@ -107,6 +137,15 @@ const faqs = [
 ];
 
 export default function HomePage() {
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonialIndex((prev) => (prev + 1) % testimonials.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "MedicalBusiness",
@@ -347,20 +386,44 @@ export default function HomePage() {
             <p className="opacity-80">Don't just take our word for it. Hear from our patients.</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {testimonials.map((t, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-md p-10 rounded-3xl border border-white/20">
-                <p className="text-lg italic mb-8">"{t.text}"</p>
-                <div className="flex items-center gap-4">
+          <div className="relative flex justify-center w-full min-h-[300px]">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentTestimonialIndex}
+                initial={{ opacity: 0, x: 40 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -40 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="bg-white/10 backdrop-blur-md p-10 rounded-3xl border border-white/20 w-full max-w-2xl flex flex-col absolute"
+              >
+                <div className="flex text-amber-400 mb-6 gap-1 justify-center">
+                  {[...Array(5)].map((_, idx) => <Star key={idx} className="w-5 h-5 fill-current" />)}
+                </div>
+                <p className="text-xl md:text-2xl text-center italic mb-8 flex-grow">"{testimonials[currentTestimonialIndex].text}"</p>
+                <div className="flex items-center justify-center gap-4 mt-auto">
                   <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-bold">
-                    {t.name.charAt(0)}
+                    {testimonials[currentTestimonialIndex].name.charAt(0)}
                   </div>
-                  <div>
-                    <h5 className="font-bold">{t.name}</h5>
-                    <p className="text-xs opacity-60 uppercase tracking-widest">{t.role}</p>
+                  <div className="text-left">
+                    <h5 className="font-bold">{testimonials[currentTestimonialIndex].name}</h5>
+                    <p className="text-xs opacity-60 uppercase tracking-widest">{testimonials[currentTestimonialIndex].role}</p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          <div className="flex justify-center gap-2 mt-8 z-20 relative">
+            {testimonials.map((_, idx) => (
+              <button 
+                key={idx}
+                onClick={() => setCurrentTestimonialIndex(idx)}
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all duration-300",
+                  currentTestimonialIndex === idx ? "w-8 bg-white" : "bg-white/30 hover:bg-white/50"
+                )}
+                aria-label={`Go to testimonial ${idx + 1}`}
+              />
             ))}
           </div>
         </div>
