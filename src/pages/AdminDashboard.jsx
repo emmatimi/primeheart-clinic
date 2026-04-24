@@ -23,6 +23,7 @@ import {
   Mail, 
   MoreVertical,
   Trash2,
+  Eye,
   ExternalLink,
   ChevronRight,
   LogOut,
@@ -91,6 +92,7 @@ export default function AdminDashboard() {
   const [successMessage, setSuccessMessage] = useState(null);
   const [isSidebarMobileOpen, setIsSidebarMobileOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [viewingAppointment, setViewingAppointment] = useState(null);
 
   React.useEffect(() => {
     const handleToggle = () => setIsSidebarMobileOpen(prev => !prev);
@@ -375,7 +377,7 @@ export default function AdminDashboard() {
            />
            <SidebarItem 
              icon={<UserCheck className="w-5 h-5" />} 
-             label="Staff Registry" 
+             label="Staff Management" 
              active={activeTab === 'staff'} 
              onClick={() => {
                setActiveTab('staff');
@@ -526,8 +528,8 @@ export default function AdminDashboard() {
                        <tr>
                           <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-left rounded-tl-2xl">Patient</th>
                           <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Service</th>
-                          <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Booked On</th>
-                          <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Scheduled For</th>
+                          
+                          <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest">Schedule</th>
                           <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-center">Status</th>
                           <th className="px-6 py-5 text-[10px] font-black text-gray-400 uppercase tracking-widest text-right rounded-tr-2xl">Actions</th>
                        </tr>
@@ -535,7 +537,7 @@ export default function AdminDashboard() {
                     <tbody className="divide-y divide-gray-50">
                        {filteredAppointments.length === 0 ? (
                          <tr>
-                            <td colSpan="6" className="px-6 py-20 text-center text-gray-400 text-sm italic font-medium">
+                            <td colSpan="5" className="px-6 py-20 text-center text-gray-400 text-sm italic font-medium">
                                No appointments found matching your criteria.
                             </td>
                          </tr>
@@ -550,33 +552,13 @@ export default function AdminDashboard() {
                                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-600 border-2 border-white rounded-full animate-bounce"></div>
                                   )}
                                </div>
-                               <div>
-                                  <p className="text-sm font-black text-gray-900 mb-0.5">{app.fullName}</p>
-                                  <div className="flex flex-col gap-1 text-[10px] text-gray-400 font-bold whitespace-nowrap">
-                                     <div className="flex items-center gap-1.5">
-                                       <Phone className="w-3 h-3 text-red-500" /> {app.phone}
-                                     </div>
-                                     <div className="flex items-center gap-1.5">
-                                       <Mail className="w-3 h-3 text-red-500" /> <span className="truncate max-w-[120px]">{app.email || 'No email'}</span>
-                                     </div>
-                                  </div>
-                               </div>
-                            </td>
+                               <p className="text-sm font-black text-gray-900">{app.fullName}</p></td>
                             <td className="px-6 py-5">
                                <span className="inline-flex px-3 py-1.5 rounded-xl bg-gray-100 border border-gray-200 text-gray-600 text-[9px] font-black uppercase tracking-widest max-w-[140px] leading-relaxed text-center break-words">
                                   {app.service}
                                </span>
                             </td>
-                            <td className="px-6 py-5">
-                               <div className="flex flex-col">
-                                  <span className="text-xs font-black text-gray-900 leading-tight">
-                                     {app.createdAt ? format(app.createdAt.toDate ? app.createdAt.toDate() : new Date(app.createdAt), 'MMM dd, yyyy') : 'N/A'}
-                                  </span>
-                                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
-                                     {app.createdAt ? format(app.createdAt.toDate ? app.createdAt.toDate() : new Date(app.createdAt), 'hh:mm a') : ''}
-                                  </span>
-                               </div>
-                            </td>
+                            
                             <td className="px-6 py-5">
                                <div className="flex flex-col bg-red-50 px-4 py-2 border border-red-100 rounded-xl w-max">
                                   <span className="text-xs font-black text-red-600 leading-tight">
@@ -614,29 +596,7 @@ export default function AdminDashboard() {
                            )}
                         </td>
                             <td className="px-6 py-5">
-                               <div className="flex items-center justify-end gap-2">
-                                  <a 
-                                    href={`tel:${app.phone}`}
-                                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
-                                    title="Call Patient"
-                                  >
-                                     <Phone className="w-4 h-4" />
-                                  </a>
-                                  <a 
-                                    href={`mailto:${app.email}?subject=Regarding Your Appointment at PrimeHeart Clinic`}
-                                    className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 active:bg-green-100 rounded-lg transition-all"
-                                    title="Send Email"
-                                  >
-                                     <Mail className="w-4 h-4" />
-                                  </a>
-                                  <button 
-                                    onClick={() => handleDelete(app)}
-                                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 rounded-lg transition-all"
-                                    title="Delete Appointment"
-                                  >
-                                     <Trash2 className="w-4 h-4" />
-                                  </button>
-                               </div>
+                               <div className="flex items-center justify-end gap-2"><button onClick={() => setViewingAppointment(app)} className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-black text-gray-600 bg-gray-50 hover:bg-gray-100 uppercase tracking-widest rounded-lg transition-all">View Details</button><button onClick={() => handleDelete(app)} className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all" title="Delete Appointment"><Trash2 className="w-4 h-4" /></button></div>
                             </td>
                          </tr>
                        ))}
@@ -651,7 +611,7 @@ export default function AdminDashboard() {
           <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm flex-col md:flex-row gap-4">
                <div className="text-center md:text-left">
-                  <h2 className="text-2xl font-black text-gray-900">Staff Registry</h2>
+                  <h2 className="text-2xl font-black text-gray-900">Staff Management</h2>
                   <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mt-1">Manage specialist profiles and qualifications</p>
                </div>
                <div className="flex gap-3">
@@ -755,6 +715,116 @@ export default function AdminDashboard() {
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[110] animate-in slide-in-from-bottom-4 duration-300">
           <div className="bg-white border border-gray-100 text-gray-900 pl-4 pr-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
             <span className="text-sm font-bold tracking-tight">{successMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* Appointment Details Modal */}
+      {viewingAppointment && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-gray-900/40 backdrop-blur-sm animate-in fade-in duration-300">
+          <div className="bg-white rounded-[2.5rem] w-full max-w-lg p-8 shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-300 max-h-[90vh] overflow-y-auto hide-scrollbar">
+            <div className="flex items-start justify-between mb-8">
+              <div>
+                <h3 className="text-2xl font-black text-gray-900 mb-1">Appointment Details</h3>
+                <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">Ref: {viewingAppointment.id.slice(0, 8).toUpperCase()}</p>
+              </div>
+              <button 
+                onClick={() => setViewingAppointment(null)}
+                className="p-2 text-gray-400 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 rounded-full transition-colors"
+                title="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Patient Info */}
+              <div className="bg-gray-50 p-5 rounded-2xl border border-gray-100">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 font-black flex items-center justify-center text-xl border border-red-200">
+                    {viewingAppointment.fullName?.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="font-black text-gray-900 text-lg leading-none">{viewingAppointment.fullName}</p>
+                    <div className="mt-1 flex items-center gap-2">
+                       <span className={cn(
+                         "text-[10px] font-black uppercase tracking-widest",
+                         viewingAppointment.status === "pending" && "text-amber-500",
+                         viewingAppointment.status === "confirmed" && "text-green-500",
+                         viewingAppointment.status === "completed" && "text-blue-500"
+                       )}>
+                         {viewingAppointment.status}
+                       </span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Phone</p>
+                    <a href={`tel:${viewingAppointment.phone}`} className="text-sm font-bold text-gray-900 hover:text-red-600 transition-colors flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-red-500" />
+                      {viewingAppointment.phone}
+                    </a>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Email</p>
+                    {viewingAppointment.email ? (
+                      <a href={`mailto:${viewingAppointment.email}`} className="text-sm font-bold text-gray-900 hover:text-red-600 transition-colors flex items-center gap-1.5 truncate">
+                        <Mail className="w-3.5 h-3.5 text-red-500" />
+                        <span className="truncate">{viewingAppointment.email}</span>
+                      </a>
+                    ) : (
+                      <span className="text-sm font-bold text-gray-400 flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" /> No Email provided</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Appointment Info */}
+              <div className="grid grid-cols-2 gap-4 bg-red-50/50 p-5 rounded-2xl border border-red-50">
+                <div>
+                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Service Type</p>
+                   <p className="text-sm font-black text-gray-900">{viewingAppointment.service}</p>
+                </div>
+                <div className="row-span-2">
+                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Creation Date</p>
+                   <p className="text-xs font-black text-gray-900">
+                     {viewingAppointment.createdAt ? new Date(viewingAppointment.createdAt.toDate ? viewingAppointment.createdAt.toDate() : viewingAppointment.createdAt).toLocaleString() : 'N/A'}
+                   </p>
+                </div>
+                <div>
+                   <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-1">Schedule</p>
+                   <p className="text-sm font-black text-red-600">
+                     {viewingAppointment.date ? new Date(viewingAppointment.date + 'T12:00:00').toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) : 'Unknown Date'}
+                   </p>
+                   <p className="text-xs font-bold text-red-500">{viewingAppointment.time}</p>
+                </div>
+              </div>
+
+              {/* Additional Notes */}
+              <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-50">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                   <AlertTriangle className="w-3.5 h-3.5 text-blue-500" /> Additional Notes
+                </p>
+                {viewingAppointment.notes ? (
+                  <p className="text-sm font-medium text-gray-900 leading-relaxed whitespace-pre-wrap">
+                    {viewingAppointment.notes}
+                  </p>
+                ) : (
+                  <p className="text-sm italic text-gray-400">No additional notes provided by the patient.</p>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-8">
+              <button 
+                 onClick={() => setViewingAppointment(null)}
+                 className="w-full py-4 bg-gray-900 text-white rounded-2xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-gray-800 transition-colors"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}
